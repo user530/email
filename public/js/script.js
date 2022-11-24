@@ -11,15 +11,56 @@ toggleAuth.addEventListener(`click`, (e) => {
   });
 });
 
+const scope = function () {
+  let var1 = 0;
+  let var2 = `abc`;
+
+  const functionality = {
+    registerMethod: async (e) => {
+      e.preventDefault();
+
+      const name = document.querySelector(`#registerName`).value;
+      const email = document.querySelector(`#registerEmail`).value;
+      const password = document.querySelector(`#registerPassword`).value;
+
+      try {
+        const { data } = await axios.post(`/register`, {
+          name,
+          email,
+          password,
+        });
+        console.log(data);
+        console.log(var1, var2);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    loginMethod: async (e) => {
+      e.preventDefault();
+
+      const email = document.querySelector(`#loginEmail`).value;
+      const password = document.querySelector(`#loginPassword`).value;
+
+      try {
+        const { data } = await axios.post(`/login`, { email, password });
+        console.log(data);
+
+        var1++;
+        console.log(var1, var2);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  };
+
+  Object.seal(functionality);
+  return functionality;
+};
+
+const closure = scope();
+
 const loginForm = document.querySelector(`#loginForm`);
 const registerForm = document.querySelector(`#registerForm`);
 
-loginForm.addEventListener(`submit`, (e) => {
-  e.preventDefault();
-  console.log(`Login!`);
-});
-
-registerForm.addEventListener(`submit`, (e) => {
-  e.preventDefault();
-  console.log(`Register!`);
-});
+registerForm.addEventListener(`submit`, closure.registerMethod);
+loginForm.addEventListener(`submit`, closure.loginMethod);
