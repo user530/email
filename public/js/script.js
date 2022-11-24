@@ -29,10 +29,13 @@ const scope = function () {
           email,
           password,
         });
+
         console.log(data);
-        console.log(var1, var2);
       } catch (error) {
-        console.error(error);
+        alert(error.response.data.msg);
+        document.querySelector(`#registerName`).value = "";
+        document.querySelector(`#registerEmail`).value = "";
+        document.querySelector(`#registerPassword`).value = "";
       }
     },
     loginMethod: async (e) => {

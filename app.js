@@ -1,8 +1,9 @@
 require(`dotenv`).config();
-require(`express-async-errors`);
 
 const express = require(`express`);
 const app = express();
+
+require(`express-async-errors`);
 
 app.use(express.json());
 app.use(express.static(`./public`));
@@ -10,13 +11,26 @@ app.use(express.static(`./public`));
 const userRouter = require(`./routes/userRouter`);
 app.use(`/`, userRouter);
 
+const errorHandler = require(`./middleware/errorHandler`);
+const notFound = require(`./middleware/notFound`);
+
+app.use(notFound);
+app.use(errorHandler);
+
+const connect = require(`./db/connectDB`);
+
 const port = process.env.PORT || app.listen();
 
-app.listen(port, async () => {
+const start = async () => {
   try {
-    console.log(`App is up and running at port ${port}...`);
+    await connect(process.env.MONGO_URI);
+    app.listen(port, async () =>
+      console.log(`App is up and running at port ${port}...`)
+    );
   } catch (error) {
     console.log(error);
     process.exit(1);
   }
-});
+};
+
+start();
