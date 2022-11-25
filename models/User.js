@@ -33,9 +33,13 @@ UserSchema.pre(`save`, async function (next) {
 
 // Custom method to generate JWT
 UserSchema.methods.generateToken = function () {
-  return jwt.sign({ name: this.name, id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_LIFETIME,
-  });
+  return jwt.sign(
+    { name: this.name, email: this.email, id: this._id },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_LIFETIME,
+    }
+  );
 };
 
 // Custom method to check password

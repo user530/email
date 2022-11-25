@@ -11,6 +11,11 @@ app.use(express.static(`./public`));
 const userRouter = require(`./routes/userRouter`);
 app.use(`/`, userRouter);
 
+// Test authorization and email
+const authorization = require(`./middleware/authorization`);
+const sendEmail = require(`./controllers/email`);
+app.get(`/send`, authorization, sendEmail);
+
 const errorHandler = require(`./middleware/errorHandler`);
 const notFound = require(`./middleware/notFound`);
 

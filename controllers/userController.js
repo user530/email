@@ -9,7 +9,7 @@ const register = async (req, res, next) => {
 
   return res
     .status(StatusCodes.CREATED)
-    .json({ user: { name: newUser.name }, token });
+    .json({ user: { name: newUser.name, email: newUser.email }, token });
 };
 
 const login = async (req, res, next) => {
@@ -30,7 +30,7 @@ const login = async (req, res, next) => {
 
   return res
     .status(StatusCodes.OK)
-    .json({ user: { name: foundUser.name }, token });
+    .json({ user: { name: foundUser.name, email: foundUser.email }, token });
 };
 
 module.exports = { register, login };

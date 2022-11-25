@@ -90,6 +90,17 @@ const scope = function () {
       document.querySelector(`#loginEmail`).value = "";
       document.querySelector(`#loginPassword`).value = "";
     },
+    emailMethod: async (e) => {
+      e.preventDefault();
+
+      const request = await axios.get(`/send`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      return;
+    },
   };
 
   Object.seal(functionality);
@@ -104,3 +115,6 @@ const messageBlock = document.querySelector(`#message`);
 
 registerForm.addEventListener(`submit`, closure.registerMethod);
 loginForm.addEventListener(`submit`, closure.loginMethod);
+
+const emailLink = document.querySelector(`#emailLink`);
+emailLink.addEventListener(`click`, closure.emailMethod);
