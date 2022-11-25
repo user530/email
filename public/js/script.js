@@ -12,7 +12,7 @@ toggleAuth.addEventListener(`click`, (e) => {
 });
 
 const scope = function () {
-  let t;
+  let token;
 
   const functionality = {
     registerMethod: async (e) => {
@@ -29,9 +29,7 @@ const scope = function () {
           password,
         });
 
-        t = data;
-
-        console.log(t);
+        token = data.token;
       } catch (error) {
         alert(error.response.data.msg);
         document.querySelector(`#registerName`).value = "";
@@ -48,9 +46,6 @@ const scope = function () {
       try {
         const { data } = await axios.post(`/login`, { email, password });
         console.log(data);
-
-        var1++;
-        console.log(var1);
       } catch (error) {
         console.log(error);
       }

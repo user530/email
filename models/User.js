@@ -38,4 +38,9 @@ UserSchema.methods.generateToken = function () {
   });
 };
 
+// Custom method to check password
+UserSchema.methods.checkPassword = function (password) {
+  return bcrypt.compareSync(password, this.password);
+};
+
 module.exports = mongoose.model(`User`, UserSchema);
