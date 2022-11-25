@@ -11,6 +11,29 @@ toggleAuth.addEventListener(`click`, (e) => {
   });
 });
 
+const showMessage = (msg, success) => {
+  messageBlock.classList.toggle(`invisible`);
+  messageBlock.classList.toggle(`visible`);
+
+  if (success) messageBlock.classList.add(`message-success`);
+  else messageBlock.classList.add(`message-error`);
+
+  messageBlock.innerText = msg;
+};
+
+const closeMessage = () => {
+  window.addEventListener(
+    `click`,
+    (e) => {
+      messageBlock.classList.toggle(`invisible`);
+      messageBlock.classList.toggle(`visible`);
+      messageBlock.classList.remove(`message-success`);
+      messageBlock.classList.remove(`message-error`);
+    },
+    { once: true }
+  );
+};
+
 const scope = function () {
   let token;
 
@@ -30,12 +53,19 @@ const scope = function () {
         });
 
         token = data.token;
+
+        showMessage(`User account created!`, true);
+
+        closeMessage();
       } catch (error) {
-        alert(error.response.data.msg);
-        document.querySelector(`#registerName`).value = "";
-        document.querySelector(`#registerEmail`).value = "";
-        document.querySelector(`#registerPassword`).value = "";
+        showMessage(`Creation failed! ${error.response.data.msg}`);
+
+        closeMessage();
       }
+
+      document.querySelector(`#registerName`).value = "";
+      document.querySelector(`#registerEmail`).value = "";
+      document.querySelector(`#registerPassword`).value = "";
     },
     loginMethod: async (e) => {
       e.preventDefault();
@@ -45,10 +75,20 @@ const scope = function () {
 
       try {
         const { data } = await axios.post(`/login`, { email, password });
-        console.log(data);
+
+        token = data.token;
+
+        showMessage(`Successfull login!`, true);
+
+        closeMessage();
       } catch (error) {
-        console.log(error);
+        showMessage(`Login failed! ${error.response.data.msg}`);
+
+        closeMessage();
       }
+
+      document.querySelector(`#loginEmail`).value = "";
+      document.querySelector(`#loginPassword`).value = "";
     },
   };
 
@@ -60,6 +100,7 @@ const closure = scope();
 
 const loginForm = document.querySelector(`#loginForm`);
 const registerForm = document.querySelector(`#registerForm`);
+const messageBlock = document.querySelector(`#message`);
 
 registerForm.addEventListener(`submit`, closure.registerMethod);
 loginForm.addEventListener(`submit`, closure.loginMethod);

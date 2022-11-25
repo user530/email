@@ -18,15 +18,15 @@ const login = async (req, res, next) => {
   if (!email || !password)
     throw new NotFoundError(`Provide valid email and password`);
 
-  const foundUser = User.findOne({ email });
+  const foundUser = await User.findOne({ email });
 
   if (!foundUser) throw new UnauthorizedError(`Wrong credentials`);
 
-  const verified = User.checkPassword(password);
+  const verified = foundUser.checkPassword(password);
 
   if (!verified) throw new UnauthorizedError(`Wrong password`);
 
-  const token = User.generateToken();
+  const token = foundUser.generateToken();
 
   return res
     .status(StatusCodes.OK)

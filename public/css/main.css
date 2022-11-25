@@ -6,3 +6,11 @@
     display: none;
 }
 
+.message-success{
+    border: 2px solid black;
+    background-color: green;
+}
+.message-error{
+    border: 2px solid black;
+    background-color: red;
+}
