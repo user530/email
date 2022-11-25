@@ -16,6 +16,14 @@ const errorHandler = (err, req, res, next) => {
     }
   }
 
+  // Handle unique value errors
+  if (err.code && err.code === 11000) {
+    customError.message = `Values of: ${Object.keys(err.keyValue).join(
+      `, `
+    )} - already taken, please use unique values for this fields`;
+    customError.status = StatusCodes.BAD_REQUEST;
+  }
+
   return res.status(customError.status).json({ msg: customError.message });
 };
 

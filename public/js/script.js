@@ -12,8 +12,7 @@ toggleAuth.addEventListener(`click`, (e) => {
 });
 
 const scope = function () {
-  let var1 = 0;
-  let var2 = `abc`;
+  let t;
 
   const functionality = {
     registerMethod: async (e) => {
@@ -30,7 +29,9 @@ const scope = function () {
           password,
         });
 
-        console.log(data);
+        t = data;
+
+        console.log(t);
       } catch (error) {
         alert(error.response.data.msg);
         document.querySelector(`#registerName`).value = "";
@@ -49,7 +50,7 @@ const scope = function () {
         console.log(data);
 
         var1++;
-        console.log(var1, var2);
+        console.log(var1);
       } catch (error) {
         console.log(error);
       }
