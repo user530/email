@@ -1,32 +1,28 @@
-const nodemailer = require(`nodemailer`);
+const sgMail = require(`@sendgrid/mail`);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const { StatusCodes } = require(`http-status-codes`);
+const { BadRequestError } = require(`../errors`);
 
 const send = async (req, res, next) => {
   const { name, email } = req.user;
 
-  const testAccount = await nodemailer.createTestAccount();
+  const msg = {
+    to: email,
+    from: process.env.MY_EMAIL,
+    subject: `Testing EmailAPI with SendGrid!`,
+    text: `This is message in plain text...`,
+    html: `<h2>This is message in HTML form.</h2><p>Here should be some content...</p>`,
+  };
 
-  const transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    auth: {
-      user: testAccount.user,
-      pass: testAccount.pass,
-    },
+  const info = await sgMail.send(msg, false, (mailErr, mailRes) => {
+    if (!mailErr) return { msg: `Message sent!`, mailRes };
+
+    return null;
   });
 
-  const info = await transporter.sendMail({
-    from: '"EmailAPI" <foo@bar.com>',
-    to: `${email}`,
-    subject: `Hello, ${name}✔`,
-    text: `Hello, ${name}! This is a plain text of the message`,
-    html: `<h2>Hello, ${name}!</h2><p>This is an HTML message</p>`,
-  });
+  if (!info) throw new BadRequestError(`Failed to deliver the email!`);
 
-  console.log("Message sent: %s", info.messageId);
-
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-
-  res.json(info);
+  return res.status(StatusCodes.OK).json(info);
 };
 
 module.exports = send;

@@ -93,13 +93,25 @@ const scope = function () {
     emailMethod: async (e) => {
       e.preventDefault();
 
-      const request = await axios.get(`/send`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      try {
+        const request = await axios.get(`/send`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      return request;
+        showMessage(request.data.msg, true);
+
+        closeMessage();
+      } catch (error) {
+        if (error.response.status === 401)
+          showMessage(`Authorization failed!`, false);
+
+        if (error.response.status === 500)
+          showMessage(`Something went wrong! Please, try again later`, false);
+
+        closeMessage();
+      }
     },
   };
 
