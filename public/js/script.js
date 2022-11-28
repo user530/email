@@ -99,7 +99,7 @@ const scope = function () {
         },
       });
 
-      return;
+      return request;
     },
   };
 
